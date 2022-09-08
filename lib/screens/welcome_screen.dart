@@ -1,7 +1,9 @@
+import 'package:flash_chat/screens/login_screen.dart';
+import 'package:flash_chat/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  final String id = "welcome_screen";
+  static const String id = "/welcome_screen";
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -44,6 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Go to log in screen.
+                    Navigator.pushNamed(context, LoginScreen.id);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
@@ -63,6 +66,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Go to registration screen.
+                    Navigator.pushNamed(context, RegistrationScreen.id);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
