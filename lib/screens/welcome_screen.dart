@@ -18,24 +18,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   void initState() {
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 3),
       upperBound: 1.0,
     );
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.decelerate,
-    );
+    animation = ColorTween(begin: Colors.red, end: Colors.blue).animate(animationController);
+    // animation = CurvedAnimation(
+    //   parent: animationController,
+    //   curve: Curves.decelerate,
+    // );
 
     animationController.forward();
 
-    animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        animationController.reverse(from: 1.0);
-      } else if (status == AnimationStatus.dismissed) {
-        animationController.forward();
-      }
-      print(status);
-    });
+    // animation.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     animationController.reverse(from: 1.0);
+    //   } else if (status == AnimationStatus.dismissed) {
+    //     animationController.forward();
+    //   }
+    //   print(status);
+    // });
 
     animationController.addListener(() {
       setState(() {});
@@ -55,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: animation.value,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -68,7 +69,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                   Hero(
                     tag: "logo",
                     child: Container(
-                      height: animation.value * 100,
+                      height: 60.0, // animation.value * 100
                       child: Image.asset('images/logo.png'),
                     ),
                   ),
