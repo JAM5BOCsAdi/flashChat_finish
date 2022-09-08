@@ -12,20 +12,44 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+  late Animation animation;
 
   @override
   void initState() {
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
-      upperBound: 100.0,
+      upperBound: 1.0,
     );
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.decelerate,
+    );
+
     animationController.forward();
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animationController.reverse(from: 1.0);
+      } else if (status == AnimationStatus.dismissed) {
+        animationController.forward();
+      }
+      print(status);
+    });
+
     animationController.addListener(() {
       setState(() {});
-      print(animationController.value);
+      print(animation.value);
     });
     super.initState();
+  }
+
+  // To stop the animation when there is no screen
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,13 +68,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                   Hero(
                     tag: "logo",
                     child: Container(
-                      height: 60.0,
+                      height: animation.value * 100,
                       child: Image.asset('images/logo.png'),
                     ),
                   ),
-                  Text(
-                    '${animationController.value.toInt()}%',
-                    style: const TextStyle(
+                  const Text(
+                    'Flash Chat',
+                    style: TextStyle(
                       fontSize: 45.0,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,
