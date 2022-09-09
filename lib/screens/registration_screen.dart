@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/components/widgets/rounded_button_widget.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -11,6 +13,10 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _firebaseAuth = FirebaseAuth.instance;
+  late String email;
+  late String password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +39,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 48.0,
               ),
               TextField(
+                keyboardType: TextInputType.emailAddress, // Changes the buttons on the phone's screen, to reach email types easily.
+                textAlign: TextAlign.center,
                 onChanged: (value) {
                   //Do something with the user input.
+                  email = value;
                 },
                 decoration: kTextFieldDecoration,
               ),
@@ -42,15 +51,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 8.0,
               ),
               TextField(
+                textAlign: TextAlign.center,
+                obscureText: true, // Passwords are hidden [with stars]
                 onChanged: (value) {
                   //Do something with the user input.
+                  password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(hintText: "Enter your password"),
               ),
               const SizedBox(
                 height: 24.0,
               ),
-              RoundedButtonWidget(title: "Register", colour: Colors.blueAccent, onPressed: () {}),
+              RoundedButtonWidget(
+                title: "Register",
+                colour: Colors.blueAccent,
+                onPressed: () async {
+                  // print(email);
+                  // print(password);
+                  try {
+                    final newUser = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+                    if (newUser != null) {
+                      Navigator.pushNamed(context, ChatScreen.id);
+                    }
+                  } catch (e) {
+                    print("_firebaseAuth error in line 70 - registration_screen: $e");
+                  }
+                },
+              ),
             ],
           ),
         ),
